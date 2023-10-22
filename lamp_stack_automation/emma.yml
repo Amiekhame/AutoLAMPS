@@ -1,0 +1,28 @@
+---
+- name: Execute deployment script and create a cron job
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Copy deployment script
+      copy:
+        src: ./emma.sh
+        dest: /tmp/emma.sh  
+        mode: 0755
+
+    - name: Edit the bash script before execution
+      replace:
+        path: /tmp/emma.sh
+        regexp: '192.168.56.31'
+        replace: '192.168.56.32'
+        backup: yes
+
+    - name: Execute deployment script
+      shell: /tmp/emma.sh
+
+    - name: Create a cron job to check the server's uptime every 12 am
+      cron:
+        name: "Check server uptime"  
+        minute: "0"
+        hour: "0"  
+        job: "uptime >> /vagrant/uptime.log"  

@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.define "master" do |master|
+    master.vm.box = "bento/ubuntu-20.04"
+    master.vm.network "private_network", ip: "192.168.56.31"
+    master.vm.provision "shell", path: "emma.sh"
+    master.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      vb.cpus = 1
+    end
+  end
+  
+  config.vm.define "slave" do |slave|
+    slave.vm.box = "bento/ubuntu-20.04"
+    slave.vm.network "private_network", ip: "192.168.56.32"
+    slave.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      vb.cpus = 1
+    end
+  end
+end
+
